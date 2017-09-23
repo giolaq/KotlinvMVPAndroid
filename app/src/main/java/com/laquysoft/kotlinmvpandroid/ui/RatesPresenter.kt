@@ -6,6 +6,8 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -33,7 +35,7 @@ class RatesPresenter : RatesContract.Presenter{
 
     fun getRates(isSubcribes : Boolean){
        if (isSubcribes) {
-           var observableRates = ApiService().loadRates()
+           var observableRates = Observable.interval(30, TimeUnit.SECONDS).flatMap { ApiService().loadRates() }
            updateView(observableRates, true)
        }
     }
@@ -50,6 +52,8 @@ class RatesPresenter : RatesContract.Presenter{
                        { t: Throwable? -> view.showEmptyView(true)
                            view.showProgress(false)})
                        subscriptions.add(subscribe)
+
+
         }
 
 
