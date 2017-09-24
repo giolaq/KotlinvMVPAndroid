@@ -2,6 +2,7 @@ package com.laquysoft.kotlinmvpandroid.ui
 
 import android.app.Fragment
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,9 @@ import com.laquysoft.kotlinmvpandroid.dagger.module.RatesModule
 import com.laquysoft.kotlinmvpandroid.model.RatesAnswer
 import timber.log.Timber
 import javax.inject.Inject
+import com.laquysoft.kotlinmvpandroid.MainActivity
+
+
 
 
 /**
@@ -97,6 +101,11 @@ class RatesListFragment : Fragment(), RatesContract.View {
         Timber.d("AUD " + rates.AUD)
         Timber.d("EUR " + rates.EUR)
         Timber.d("GBP " + rates.GBP)
+        val currencies: List<Float> = listOf(rates.AUD!!, rates.EUR!!, rates.GBP!!);
+        val adapter = RatesAdapter(activity, currencies.toMutableList(), this);
+        val horizontalLayoutManagaer = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView!!.setLayoutManager(horizontalLayoutManagaer)
+        recyclerView!!.setAdapter(adapter)
     }
 
     fun showToast(message: String) {
