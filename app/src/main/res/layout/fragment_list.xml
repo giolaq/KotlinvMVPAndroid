@@ -17,7 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <RelativeLayout
@@ -25,7 +24,8 @@
                 android:layout_height="350dp"
                 android:paddingTop="150dp"
                 android:layout_gravity="center"
-                app:layout_scrollFlags="scroll">
+                app:layout_scrollFlags="scroll"
+                android:background="@drawable/bg_gradient_primary">
 
                 <com.laquysoft.kotlinmvpandroid.ui.SnappyRecyclerView
                     android:id="@+id/recyclerview"
@@ -89,7 +89,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:itemBackground="@color/colorPrimary"
+        app:itemBackground="@color/color_white"
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@drawable/selector"
         app:menu="@menu/bottom_navigation_main" />
 
 </android.support.design.widget.CoordinatorLayout>

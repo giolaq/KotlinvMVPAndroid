@@ -21,6 +21,7 @@ import com.laquysoft.kotlinmvpandroid.dagger.component.DaggerRatesComponent
 import com.laquysoft.kotlinmvpandroid.dagger.module.RatesModule
 import com.laquysoft.kotlinmvpandroid.model.RatesAnswer
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
+import org.jetbrains.anko.AnkoLogger
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -62,6 +63,12 @@ class RatesListFragment : Fragment(), RatesContract.View {
     @JvmField
     var bottomNavigation: BottomNavigationView? = null
 
+
+    private lateinit var ratesAdapter: RatesAdapter
+    private lateinit var indicatorAdapter: RatesIndicatorAdapter
+
+    private var ratesList: MutableList<String> =  mutableListOf("£","€","$")
+
     fun newInstance(): RatesListFragment {
         return RatesListFragment()
     }
@@ -88,6 +95,7 @@ class RatesListFragment : Fragment(), RatesContract.View {
         return mRootView
     }
 
+
     fun initView() {
 
         val supportActivity = activity as AppCompatActivity
@@ -100,11 +108,9 @@ class RatesListFragment : Fragment(), RatesContract.View {
 
         handleDummyOperationList()
 
-        val currencies: List<Float> = listOf(5f, 6f, 1000f);
-        val adapter = RatesIndicatorAdapter(activity, currencies.toMutableList(), this);
-        val horizontalLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewInToolbar!!.setLayoutManager(horizontalLayoutManager)
-        recyclerViewInToolbar!!.setAdapter(ScaleInAnimationAdapter(adapter))
+        indicatorAdapter = RatesIndicatorAdapter(activity, ratesList, this);
+        recyclerViewInToolbar!!.setLayoutManager(LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false))
+        recyclerViewInToolbar!!.setAdapter(ScaleInAnimationAdapter(indicatorAdapter))
 
         val params = appBarLayout!!.getLayoutParams() as CoordinatorLayout.LayoutParams
         params.behavior = AppBarLayout.Behavior()
@@ -117,6 +123,10 @@ class RatesListFragment : Fragment(), RatesContract.View {
 
         val bottomNavBarLayoutParams = bottomNavigation!!.getLayoutParams() as CoordinatorLayout.LayoutParams
         bottomNavBarLayoutParams.setBehavior(BottomNavigationViewBehavior());
+
+        ratesAdapter = RatesAdapter(activity, ratesList, this);
+        recyclerView!!.setLayoutManager(LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false))
+        recyclerView!!.setAdapter(ratesAdapter)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -144,25 +154,41 @@ class RatesListFragment : Fragment(), RatesContract.View {
     }
 
 
+
     override fun onLoadRatesOK(rates: RatesAnswer.Rates) {
-        // Here you can get data ans show on UI
-        Timber.d("AUD " + rates.AUD)
-        Timber.d("EUR " + rates.EUR)
         Timber.d("GBP " + rates.GBP)
-        val currencies: List<Float> = listOf(rates.AUD!!, rates.EUR!!, rates.GBP!!);
-        val adapter = RatesAdapter(activity, currencies.toMutableList(), this);
-        val horizontalLayoutManagaer = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView!!.setLayoutManager(horizontalLayoutManagaer)
-        recyclerView!!.setAdapter(adapter)
+        Timber.d("EUR " + rates.EUR)
+        ratesList = mutableListOf(activity.getString(R.string.gbp, rates.GBP),
+                activity.getString(R.string.eur, rates.EUR),
+                activity.getString(R.string.usd, 1f))
+        ratesAdapter.clearAndAddElement(ratesList)
+        indicatorAdapter.clearAndAddElement(ratesList)
     }
+
 
     fun showToast(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 
     fun handleDummyOperationList() {
-        val currencies: List<Float> = listOf(2f, 3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f, 11f, 23f, 3f, 5f, 5f);
-        val adapter = RatesAdapter(activity, currencies.toMutableList(), this);
+        val transactions: List<String> = listOf("Transaction 1"
+                , "Transaction 2"
+                , "Transaction 3"
+                , "Transaction 4"
+                , "Transaction 5"
+                , "Transaction 6"
+                , "Transaction 7"
+                , "Transaction 8"
+                , "Transaction 9"
+                , "Transaction 10"
+                , "Transaction 11"
+                , "Transaction 12"
+                , "Transaction 13"
+                , "Transaction 14"
+                , "Transaction 15"
+                , "Transaction $$$"
+        );
+        val adapter = TransactionAdapter(activity, transactions.toMutableList(), this);
         val verticalLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         recyclerViewPageLayout!!.setLayoutManager(verticalLayoutManager)
         recyclerViewPageLayout!!.setAdapter(ScaleInAnimationAdapter(adapter))

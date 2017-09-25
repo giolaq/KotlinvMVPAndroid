@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">KotlinMVPAndroid</string>
+
+    <string name="gbp">£%1$.2f</string>
+    <string name="eur">€%1$.2f</string>
+    <string name="usd">$%1$.2f</string>
+    <string name="accounts">Accounts</string>
+    <string name="analytics">Analytics</string>
+    <string name="fab">FAB</string>
+    <string name="cards">Cards</string>
+
 </resources>

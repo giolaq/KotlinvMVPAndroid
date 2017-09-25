@@ -6,14 +6,13 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 
 /**
  * Created by joaobiriba on 23/09/2017.
  */
-class RatesPresenter : RatesContract.Presenter{
+class RatesPresenter : RatesContract.Presenter {
 
     private val subscriptions = CompositeDisposable()
     private lateinit var view: RatesContract.View
@@ -33,28 +32,33 @@ class RatesPresenter : RatesContract.Presenter{
         subscriptions.clear()
     }
 
-    fun getRates(isSubcribes : Boolean){
-       if (isSubcribes) {
-           var observableRates = Observable.interval(30, TimeUnit.SECONDS).flatMap { ApiService().loadRates() }
-           updateView(observableRates, true)
-       }
+    fun getRates(isSubcribes: Boolean) {
+        if (isSubcribes) {
+            var observableRates = Observable.interval(30, TimeUnit.SECONDS)
+                                            .startWith(0)
+                                            .flatMap { ApiService().loadRates() }
+            updateView(observableRates, true)
+        }
     }
 
-    fun updateView(observableRates: Observable<RatesAnswer>, isAPI : Boolean){
-       var subscribe =  observableRates.subscribeOn(Schedulers.io())
-                       .observeOn(AndroidSchedulers.mainThread())
-               .subscribe({answer: RatesAnswer? ->
-                   if (isAPI){
-                       // insert into db
-                       var listUsers = answer!!.rates;
-                       view.onLoadRatesOK(listUsers!!)
-                       view.showProgress(false)}},
-                       { t: Throwable? -> view.showEmptyView(true)
-                           view.showProgress(false)})
-                       subscriptions.add(subscribe)
+    fun updateView(observableRates: Observable<RatesAnswer>, isAPI: Boolean) {
+        var subscribe = observableRates.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ answer: RatesAnswer? ->
+                    if (isAPI) {
+                        var listUsers = answer!!.rates;
+                        view.onLoadRatesOK(listUsers!!)
+                        view.showProgress(false)
+                    }
+                },
+                        { t: Throwable? ->
+                            view.showEmptyView(true)
+                            view.showProgress(false)
+                        })
+        subscriptions.add(subscribe)
 
 
-        }
+    }
 
 
 }

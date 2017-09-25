@@ -5,30 +5,30 @@
         android:id="@+id/action_1"
         android:enabled="true"
         android:icon="@drawable/icon_m_wallet_state"
-        android:title="aaa"
+        android:title="@string/accounts"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_2"
         android:enabled="true"
         android:icon="@drawable/icon_m_categorisation_state"
-        android:title="bbb"
+        android:title="@string/analytics"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_3"
         android:enabled="true"
         android:icon="@drawable/icon_m_categorisation_state"
-        android:title="ccc"
+        android:title="@string/fab"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_4"
         android:enabled="true"
         android:icon="@drawable/icon_m_card_state"
-        android:title="ccc"
+        android:title="@string/cards"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_5"
         android:enabled="true"
         android:icon="@drawable/icon_m_more_products_state"
-        android:title="ccc"
+        android:title="More"
         app:showAsAction="ifRoom" />
 </menu>

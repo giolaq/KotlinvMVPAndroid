@@ -8,7 +8,7 @@ import timber.log.Timber
 
 
 /**
- * Created by sunil on 5/30/2017.
+ * Created by joaobiriba on 5/30/2017.
  */
 class MainApplication : Application(){
 

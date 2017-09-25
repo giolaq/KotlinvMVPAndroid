@@ -16,7 +16,7 @@ import org.jetbrains.anko.AnkoLogger
  * Created by joaobiriba on 24/09/2017.
  */
 
-class RatesIndicatorAdapter(private val context: Context, private val currenciesList: MutableList<Float>, fragment: Fragment) : RecyclerView.Adapter<RatesIndicatorAdapter.CurrencyViewHolder>(), AnkoLogger {
+class RatesIndicatorAdapter(private val context: Context, private val currenciesList: MutableList<String>, fragment: Fragment) : RecyclerView.Adapter<RatesIndicatorAdapter.CurrencyViewHolder>(), AnkoLogger {
 
 
     override fun onCreateViewHolder(viewGroup: ViewGroup?, viewType: Int): CurrencyViewHolder {
@@ -26,7 +26,7 @@ class RatesIndicatorAdapter(private val context: Context, private val currencies
 
     override fun onBindViewHolder(holder: CurrencyViewHolder?, position: Int) {
         var currency = currenciesList[position]
-        holder!!.itemTitle!!.setText(currency.toString())
+        holder!!.itemTitle!!.setText(currency)
     }
 
     override fun getItemCount(): Int {
@@ -41,5 +41,12 @@ class RatesIndicatorAdapter(private val context: Context, private val currencies
         }
 
     }
+
+    fun clearAndAddElement(currencyNewList: List<String>) {
+        currenciesList.clear()
+        currenciesList.addAll(currencyNewList)
+        notifyDataSetChanged()
+    }
+
 
 }
