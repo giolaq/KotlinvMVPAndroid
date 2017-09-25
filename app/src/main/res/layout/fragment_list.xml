@@ -84,4 +84,12 @@
 
     </android.support.v4.widget.NestedScrollView>
 
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:itemBackground="@color/colorPrimary"
+        app:menu="@menu/bottom_navigation_main" />
+
 </android.support.design.widget.CoordinatorLayout>
