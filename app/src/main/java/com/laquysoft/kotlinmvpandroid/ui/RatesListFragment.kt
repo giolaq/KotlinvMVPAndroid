@@ -2,9 +2,15 @@ package com.laquysoft.kotlinmvpandroid.ui
 
 import android.app.Fragment
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
+import android.support.design.widget.CoordinatorLayout
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
@@ -15,9 +21,10 @@ import com.laquysoft.kotlinmvpandroid.R
 import com.laquysoft.kotlinmvpandroid.dagger.component.DaggerRatesComponent
 import com.laquysoft.kotlinmvpandroid.dagger.module.RatesModule
 import com.laquysoft.kotlinmvpandroid.model.RatesAnswer
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
+import org.jetbrains.anko.AnkoLogger
 import timber.log.Timber
 import javax.inject.Inject
-import com.laquysoft.kotlinmvpandroid.MainActivity
 
 
 
@@ -33,7 +40,23 @@ class RatesListFragment : Fragment(), RatesContract.View {
 
     @BindView(R.id.recyclerview)
     @JvmField
-    var recyclerView: RecyclerView? = null
+    var recyclerView: SnappyRecyclerView? = null
+
+    @BindView(R.id.recycler_view_pagelayout)
+    @JvmField
+    var recyclerViewPageLayout: RecyclerView? = null
+
+    @BindView(R.id.recyclerview_in_toolbar)
+    @JvmField
+    var recyclerViewInToolbar: SnappyRecyclerView? = null
+
+    @BindView(R.id.my_toolbar)
+    @JvmField
+    var toolbar: Toolbar? = null
+
+    @BindView(R.id.app_bar_layout)
+    @JvmField
+    var appBarLayout: AppBarLayout? = null
 
     @BindView(R.id.progressbar)
     @JvmField
@@ -66,9 +89,33 @@ class RatesListFragment : Fragment(), RatesContract.View {
     }
 
     fun initView() {
+
+        val supportActivity = activity as AppCompatActivity
+        supportActivity.setSupportActionBar(toolbar)
+
         // call retrofit
         progressbar!!.setVisibility(View.VISIBLE)
-        presenter.loadRatesAPI();
+        presenter.loadRatesAPI()
+
+
+        handleDummyOperationList()
+
+        val currencies: List<Float> = listOf(5f, 6f, 1000f);
+        val adapter = RatesIndicatorAdapter(activity, currencies.toMutableList(), this);
+        val horizontalLayoutManagaer = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        recyclerViewInToolbar!!.setLayoutManager(horizontalLayoutManagaer)
+        recyclerViewInToolbar!!.setAdapter(ScaleInAnimationAdapter(adapter))
+
+        val params = appBarLayout!!.getLayoutParams() as CoordinatorLayout.LayoutParams
+        params.behavior = AppBarLayout.Behavior()
+        val behavior = params.behavior as AppBarLayout.Behavior?
+        behavior!!.setDragCallback(object : AppBarLayout.Behavior.DragCallback() {
+            override fun canDrag(appBarLayout: AppBarLayout): Boolean {
+                return false
+            }
+        })
+
+
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -110,6 +157,14 @@ class RatesListFragment : Fragment(), RatesContract.View {
 
     fun showToast(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
+    }
+
+    fun handleDummyOperationList() {
+        val currencies: List<Float> = listOf(2f, 3f, 4f);
+        val adapter = RatesAdapter(activity, currencies.toMutableList(), this);
+        val verticalLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        recyclerViewPageLayout!!.setLayoutManager(verticalLayoutManager)
+        recyclerViewPageLayout!!.setAdapter(ScaleInAnimationAdapter(adapter))
     }
 
 }
